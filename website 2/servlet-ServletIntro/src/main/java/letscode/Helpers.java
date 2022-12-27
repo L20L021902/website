@@ -3,14 +3,17 @@ package letscode;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.logging.Logger;
 
 public class Helpers {
 
 
     enum Webpage {
         Login,
-        Employee
+        Employee,
+        GovernmentClient,
+        GovernmentGoods,
+        InfoClient,
+        Stocks
         //TODO
     }
     public static String getWebpage(Webpage webpage) {
@@ -23,6 +26,18 @@ public class Helpers {
                     break;
                 case Employee:
                     inputStream = Files.newInputStream(Path.of("html/employee/employee.html"));
+                    break;
+                case GovernmentClient:
+                    inputStream = Files.newInputStream(Path.of("html/governmentClient/governmentClient.html"));
+                    break;
+                case GovernmentGoods:
+                    inputStream = Files.newInputStream(Path.of("html/governmentGoods/governmentGoods.html"));
+                    break;
+                case InfoClient:
+                    inputStream = Files.newInputStream(Path.of("html/infocient/indexclient.html"));
+                    break;
+                case Stocks:
+                    inputStream = Files.newInputStream(Path.of("html/stocks/stocks.html"));
                     break;
                 default:
                     // Error
