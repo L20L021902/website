@@ -14,7 +14,6 @@ public class Helpers {
         GovernmentGoods,
         InfoClient,
         Stocks
-        //TODO
     }
     public static String getWebpage(Webpage webpage) {
         InputStream inputStream;
@@ -63,7 +62,7 @@ public class Helpers {
         }
     }
 
-    private static String readFromInputStream(InputStream inputStream)
+    public static String readFromInputStream(InputStream inputStream)
             throws IOException {
         StringBuilder resultStringBuilder = new StringBuilder();
         try (BufferedReader br
