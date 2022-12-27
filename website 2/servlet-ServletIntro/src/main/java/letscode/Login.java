@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.UUID;
 
 @WebServlet(urlPatterns = "/login")
@@ -82,14 +83,15 @@ public class Login extends HttpServlet {
         try {
             c = Database.getConnection();
 
-            stmt = c.prepareStatement("INSERT INTO TOKENS VALUES (?,?)");
-            stmt.setString(1, username);
-            stmt.setString(2, token);
+            stmt = c.prepareStatement("INSERT INTO TOKENS VALUES (?,?,?)");
+            stmt.setString(2, username);
+            stmt.setString(3, token);
             stmt.executeUpdate();
 
             stmt.close();
             c.close();
         } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
             return null;
         }
 
@@ -103,9 +105,9 @@ public class Login extends HttpServlet {
         try {
             c = Database.getConnection();
 
-            stmt = c.prepareStatement("SELECT ID FROM USERS WHERE USERNAME = ? AND PASSWORD = ?");
+            stmt = c.prepareStatement("SELECT ID FROM USERS WHERE USERNAME is ? AND PASSWORD is ?");
             stmt.setString(1, username);
-            stmt.setBlob(2, new ByteArrayInputStream(passwordHash));
+            stmt.setBytes(2, passwordHash);
             ResultSet rs  = stmt.executeQuery();
 
             userFound = rs.next(); // if the query returned something than user+pass combo exists

@@ -13,8 +13,8 @@ public class Database {
             // Users
             stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS USERS" +
-                    "(ID INT PRIMARY KEY     NOT NULL," +
-                    " USERNAME           TEXT    NOT NULL, " +
+                    "(ID INTEGER PRIMARY KEY," +
+                    " USERNAME           TEXT    NOT NULL UNIQUE, " +
                     " PASSWORD           BLOB    NOT NULL, " + // Hashed password
                     " REALNAME           TEXT    NOT NULL, " +
                     " SEX                TEXT    NOT NULL, " +
@@ -27,8 +27,8 @@ public class Database {
             // Logged in tokens
             stmt = c.createStatement();
             sql = "CREATE TABLE IF NOT EXISTS TOKENS" +
-                    "(ID INT PRIMARY KEY     NOT NULL," +
-                    " USERNAME        TEXT    NOT NULL, " +
+                    "(ID INTEGER PRIMARY KEY," +
+                    " USERNAME        TEXT    NOT NULL UNIQUE, " +
                     " TOKEN           TEXT    NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
