@@ -1,0 +1,123 @@
+*{padding: 0;margin: 0;border: 0;}
+*,*:before,*:after{-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing:border-box;}
+:focus,a:active{outline:none;}
+a:focus,a:active{outline:none;}
+nav,footer,header,aside{display:block;}
+html,body{height:100%;width:100%;font-size:100%;line-height:1;font-size:14px;-ms-text-size-adjust:100%;}
+input,button,textarea{font-family:inherit;}
+input::-ms-clear{display:none;}
+button{cursor:pointer;}
+button::-moz-focus-inner{padding:0;border:0;}
+a,a:visited{text-decoration:none;}
+a:hover{text-decoration:none;}
+ul li{list-style:none;}
+img{vertical-align:top;}
+h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;}
+
+/*--------------------------------*/
+
+body{
+    background: url('https://img.freepik.com/free-vector/minimalist-white-abstract-background_23-2148816315.jpg?w=2000') no-repeat;
+   background-size: cover; 
+   
+    
+}
+
+/*-----LOGIN-----*/
+.wrapper {}
+.block {}
+.block-text {
+   text-align: center;
+   font-size: 25px;
+   margin:200px 0px 100px 0px;
+}
+.block-log {
+   display: flex;
+   flex-direction: column;
+   align-items: center;   
+}
+.log-text {
+   margin:0px 0px 20px 0px;
+   font-size: 20px;
+   font-weight: 700;
+}
+.log-press {}
+.log-press-one{
+   border: 1px solid #4c78f0;
+   border-radius: 2px;
+   margin:0px 0px 12px 0px;
+}
+.press-login {
+   background:url('https://cdn-icons-png.flaticon.com/512/56/56745.png') no-repeat;
+   background-position:5px 50%;
+   padding: 0px 0px 0px 25px ;
+   background-size: 10px 10px;
+   font-family: 'Open Sans', sans-serif;
+   font-size: 13px;
+}
+.place {
+   border: 1 solid #4c78f0;
+   width: 300px;
+   height: 40px;
+}
+
+.log-press-two{
+   border: 1px solid #4c78f0;
+   border-radius: 2px;
+
+}
+.press-password {
+   background: url('https://e7.pngegg.com/pngimages/974/294/png-clipart-computer-icons-password-black-and-white-%D0%B7%D0%B0%D0%BC%D0%B5%D1%82%D0%BA%D0%B0.png') no-repeat;
+   background-position:5px 50%;
+   background-size: 10px 10px;
+   padding: 0px 0px 0px 25px ;
+   font-family: 'Open Sans', sans-serif;
+   font-size: 13px;
+}
+.block-btn {
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+   margin:20px 0px 0px 0px;
+}
+.btn-button{
+   border:1px solid #4c78f0;
+   border-radius: 2px;
+   background-color: #4c78f0;
+   width: 280px;
+   height: 40px;
+}
+
+.btn-button{
+   display: inline-block;
+   text-align: center;
+   padding: 11px 0px 0px 0px;
+   color:white;
+   text-transform: uppercase;
+   font-family: 'Open Sans', sans-serif;
+}
+
+.btn-button:hover{
+   box-shadow: 0 2px 2px #0080c0;
+   cursor: pointer;
+   top:-7px;
+   transition:all 0.1s ease 0s;
+}
+.btn-button a{
+   color:#fff;
+}
+.btn-link{
+   margin:0px 0px 0px 45%;
+   margin:4px 0px 0px 0px;
+   font-size: 13px;
+   font-family: 'Open Sans', sans-serif;
+   font-weight: 700;
+   color:#4c78f0;
+}
+
+
+/*----- CLIENT INFO------*/
+
+
+
+
