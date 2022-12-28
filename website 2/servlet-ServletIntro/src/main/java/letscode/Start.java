@@ -18,5 +18,6 @@ public class Start implements ServletContextListener {
             System.out.println("Couldn't init databases!");
             System.exit(-1);
         }
+        Registration.mockRegister();
     }
 }
