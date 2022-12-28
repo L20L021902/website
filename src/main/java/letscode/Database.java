@@ -215,4 +215,25 @@ public class Database {
             return false;
         }
     }
+
+    public static boolean deleteGoods(int goodsID) {
+
+        if (goodsID == 0) {
+            return false;
+        }
+
+        try (Connection c = Database.getConnection()) {
+            PreparedStatement stmt = c.prepareStatement("DELETE FROM GOODS WHERE GOODS_ID is ?");
+
+            stmt.setInt(1, goodsID);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            return true;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

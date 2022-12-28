@@ -51,6 +51,9 @@ public class Employee extends HttpServlet {
             case "/update":
                 updateGoods(req, resp);
                 break;
+            case "/delete":
+                deleteGoods(req, resp);
+                break;
             default:
                 resp.sendError(404);
                 break;
@@ -93,6 +96,22 @@ public class Employee extends HttpServlet {
                     (int) json.get("stock"),
                     (int) json.get("stock") > 0 ? "有货" : "却贷",
                     Instant.now().getEpochSecond()
+            )) {
+                resp.sendError(400);
+            } else {
+                resp.setStatus(200);
+            }
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void deleteGoods(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
+
+            if (!Database.deleteGoods(
+                    (int) json.get("goods_id")
             )) {
                 resp.sendError(400);
             } else {

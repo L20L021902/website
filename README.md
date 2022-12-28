@@ -38,3 +38,13 @@
     "stock": 10
 }
 ```
+
+## Delete goods
+- Method: `POST`
+- Endpoint: `/employee/delete`
+- Body:
+```json
+{
+    "goods_id": 567001231
+}
+```
