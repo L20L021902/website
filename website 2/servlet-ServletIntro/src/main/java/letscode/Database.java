@@ -29,7 +29,8 @@ public class Database {
             sql = "CREATE TABLE IF NOT EXISTS TOKENS" +
                     "(ID INTEGER PRIMARY KEY," +
                     " USERNAME        TEXT    NOT NULL UNIQUE, " +
-                    " TOKEN           TEXT    NOT NULL)";
+                    " TOKEN           TEXT    NOT NULL, " +
+                    " VALID_UNTIL     INTEGER NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
 

@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -75,7 +76,7 @@ public class Login extends HttpServlet {
     }
 
     private static String generateToken(String username) {
-        String token = UUID.randomUUID().toString();
+        String token;
 
         // Save token in the database
         Connection c;
@@ -83,9 +84,29 @@ public class Login extends HttpServlet {
         try {
             c = Database.getConnection();
 
-            stmt = c.prepareStatement("INSERT INTO TOKENS VALUES (?,?,?)");
+            // check if there still is a valid token
+            stmt = c.prepareStatement("SELECT TOKEN,VALID_UNTIL FROM TOKENS WHERE USERNAME is ?");
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                if (rs.getLong("VALID_UNTIL") > Instant.now().getEpochSecond()) {
+                    // token still valid
+                    token = rs.getString("TOKEN");
+                    stmt.close();
+                    c.close();
+                    return token;
+                }
+            }
+
+            stmt.close();
+
+            // no valid token found, generating a new one
+            token = UUID.randomUUID().toString();
+
+            stmt = c.prepareStatement("INSERT INTO TOKENS VALUES (?,?,?,?)");
             stmt.setString(2, username);
             stmt.setString(3, token);
+            stmt.setLong(4, Instant.now().getEpochSecond() + 3600); // valid for one hour
             stmt.executeUpdate();
 
             stmt.close();
@@ -108,7 +129,7 @@ public class Login extends HttpServlet {
             stmt = c.prepareStatement("SELECT ID FROM USERS WHERE USERNAME is ? AND PASSWORD is ?");
             stmt.setString(1, username);
             stmt.setBytes(2, passwordHash);
-            ResultSet rs  = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
             userFound = rs.next(); // if the query returned something than user+pass combo exists
 
