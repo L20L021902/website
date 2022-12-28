@@ -156,4 +156,33 @@ public class Database {
             return null;
         }
     }
+
+    public static boolean addGoods(int goodsID, String name, String category, int buyPrice, int sellPrice, int stock,
+                                   String status, long updateDate) {
+
+        if (goodsID == 0 || name == null || category == null || buyPrice == 0 || sellPrice == 0 || status == null || updateDate == 0) {
+            return false;
+        }
+
+        try (Connection c = Database.getConnection()) {
+            PreparedStatement stmt = c.prepareStatement("INSERT INTO GOODS VALUES (?,?,?,?,?,?,?,?,?)");
+
+            stmt.setInt(2, goodsID);
+            stmt.setString(3, name);
+            stmt.setString(4, category);
+            stmt.setInt(5, buyPrice);
+            stmt.setInt(6, sellPrice);
+            stmt.setInt(7, stock);
+            stmt.setString(8, status);
+            stmt.setLong(9, updateDate);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            return true;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
