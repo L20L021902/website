@@ -47,4 +47,27 @@ public class Database {
         Class.forName("org.sqlite.JDBC");
         return DriverManager.getConnection("jdbc:sqlite:database.db");
     }
+
+    public static boolean updateUserInfo(String username, String realname, String sex, String address, long phone) {
+        try {
+            Connection c = getConnection();
+            PreparedStatement stmt = c.prepareStatement("UPDATE USERS SET REALNAME = ?, SEX = ?, ADDRESS = ?, PHONE = ? WHERE USERNAME is ?");
+
+            stmt.setString(1, realname);
+            stmt.setString(2, sex);
+            stmt.setString(3, address);
+            stmt.setLong(4, phone);
+            stmt.setString(5, username);
+
+            stmt.executeUpdate();
+
+            stmt.close();
+            c.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
 }
