@@ -117,3 +117,31 @@
   }
 ]
 ```
+
+## Add client
+- Method: `POST`
+- Endpoint: `/governmentClient/add`
+- Body:
+```json
+{
+    "client_id": 233454,
+    "name": "Jack",
+    "sex": "男",
+    "phone": 13345676457,
+    "address": "大道街"
+}
+```
+
+## Update client
+- Method: `POST`
+- Endpoint: `/governmentClient/update`
+- Body:
+```json
+{
+    "client_id": 233454,
+    "name": "Jack",
+    "sex": "男",
+    "phone": 13345676457,
+    "address": "大道街"
+}
+```

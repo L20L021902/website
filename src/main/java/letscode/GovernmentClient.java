@@ -1,5 +1,9 @@
 package letscode;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -7,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Instant;
 
 @WebServlet(urlPatterns = "/governmentClient/*")
 public class GovernmentClient extends HttpServlet {
@@ -42,6 +47,12 @@ public class GovernmentClient extends HttpServlet {
             case "/get":
                 getClients(req, resp);
                 break;
+            case "/add":
+                addClient(req, resp);
+                break;
+            case "/update":
+                updateClient(req, resp);
+                break;
             default:
                 resp.sendError(404);
                 break;
@@ -65,4 +76,45 @@ public class GovernmentClient extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
+
+    private static void addClient(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
+
+            if (!Database.addClient(
+                    (int) json.get("client_id"),
+                    (String) json.get("name"),
+                    (String) json.get("sex"),
+                    (String) json.get("address"),
+                    (long) json.get("phone")
+            )) {
+                resp.sendError(400);
+            } else {
+                resp.setStatus(200);
+            }
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void updateClient(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
+
+            if (!Database.updateClient(
+                    (int) json.get("client_id"),
+                    (String) json.get("name"),
+                    (String) json.get("sex"),
+                    (String) json.get("address"),
+                    (long) json.get("phone")
+            )) {
+                resp.sendError(400);
+            } else {
+                resp.setStatus(200);
+            }
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

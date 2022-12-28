@@ -267,4 +267,54 @@ public class Database {
             return null;
         }
     }
+
+    public static boolean addClient(int clientID, String name, String sex, String address, long phone) {
+
+        if (clientID == 0 || name == null || sex == null || address == null || phone == 0) {
+            return false;
+        }
+
+        try (Connection c = Database.getConnection()) {
+            PreparedStatement stmt = c.prepareStatement("INSERT INTO CLIENTS VALUES (?,?,?,?,?,?)");
+
+            stmt.setInt(2, clientID);
+            stmt.setString(3, name);
+            stmt.setString(4, sex);
+            stmt.setString(5, address);
+            stmt.setLong(6, phone);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            return true;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean updateClient(int clientID, String name, String sex, String address, long phone) {
+
+        if (clientID == 0 || name == null || sex == null || address == null || phone == 0) {
+            return false;
+        }
+
+        try (Connection c = Database.getConnection()) {
+            PreparedStatement stmt = c.prepareStatement("UPDATE CLIENTS SET NAME = ?, SEX = ?, ADDRESS = ?, PHONE = ? WHERE CLIENT_ID = ?");
+
+            stmt.setString(1, name);
+            stmt.setString(2, sex);
+            stmt.setString(3, address);
+            stmt.setLong(4, phone);
+            stmt.setInt(5, clientID);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            return true;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
