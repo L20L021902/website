@@ -48,6 +48,9 @@ public class Employee extends HttpServlet {
             case "/add":
                 addGoods(req, resp);
                 break;
+            case "/update":
+                updateGoods(req, resp);
+                break;
             default:
                 resp.sendError(404);
                 break;
@@ -66,6 +69,29 @@ public class Employee extends HttpServlet {
                     (int) json.get("sell_price"),
                     0,
                     "却贷",
+                    Instant.now().getEpochSecond()
+            )) {
+                resp.sendError(400);
+            } else {
+                resp.setStatus(200);
+            }
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void updateGoods(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
+
+            if (!Database.updateGoods(
+                    (int) json.get("goods_id"),
+                    (String) json.get("name"),
+                    (String) json.get("category"),
+                    (int) json.get("buy_price"),
+                    (int) json.get("sell_price"),
+                    (int) json.get("stock"),
+                    (int) json.get("stock") > 0 ? "有货" : "却贷",
                     Instant.now().getEpochSecond()
             )) {
                 resp.sendError(400);

@@ -185,4 +185,34 @@ public class Database {
             return false;
         }
     }
+
+    public static boolean updateGoods(int goodsID, String name, String category, int buyPrice, int sellPrice, int stock,
+                                   String status, long updateDate) {
+
+        if (goodsID == 0 || name == null || category == null || buyPrice == 0 || sellPrice == 0 || status == null || updateDate == 0) {
+            return false;
+        }
+
+        try (Connection c = Database.getConnection()) {
+            PreparedStatement stmt = c.prepareStatement("UPDATE GOODS SET NAME = ?, CATEGORY = ?, BUY_PRICE = ?, SELL_PRICE = ?," +
+                    "STOCK = ?, STATUS = ?, UPDATE_DATE = ? WHERE GOODS_ID is ?");
+
+            stmt.setString(1, name);
+            stmt.setString(2, category);
+            stmt.setInt(3, buyPrice);
+            stmt.setInt(4, sellPrice);
+            stmt.setInt(5, stock);
+            stmt.setString(6, status);
+            stmt.setLong(7, updateDate);
+            stmt.setInt(8, goodsID);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            return true;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
