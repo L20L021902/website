@@ -45,6 +45,11 @@ public class TokenChecker {
             }
         }
 
+        try {
+            resp.sendRedirect("/login");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

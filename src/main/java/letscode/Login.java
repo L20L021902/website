@@ -19,7 +19,7 @@ import java.sql.*;
 import java.time.Instant;
 import java.util.UUID;
 
-@WebServlet(urlPatterns = {"/login", "/login/*"})
+@WebServlet(urlPatterns = {"/login", "/login/*", ""})
 public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -40,6 +40,7 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Login attempt");
         try {
             JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
             String username = (String) json.get("username");
