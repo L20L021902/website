@@ -13,45 +13,40 @@ import java.util.Objects;
 
 public class TokenChecker {
 
-    public static boolean authorize(HttpServletRequest req, HttpServletResponse resp) {
+    public static String authenticate(HttpServletRequest req, HttpServletResponse resp) {
         for (Cookie cookie: req.getCookies()) {
 
             if (Objects.equals(cookie.getName(), "token")) {
 
-                switch (checkToken(cookie.getValue())) {
-                    case Valid:
-                        return true;
-                    case Invalid:
-                        try {
-                            resp.sendRedirect("/login");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return false;
+                String username = checkToken(cookie.getValue());
 
+                if (username == null) {
+                    try {
+                        resp.sendRedirect("/login");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    return null;
                 }
 
+                return username;
             }
-
         }
 
-        return false;
+        return null;
     }
 
-    enum TOKEN_STATUS {
-        Valid,
-        Invalid
-    }
-    private static TOKEN_STATUS checkToken(String token) {
+    private static String checkToken(String token) {
         if (token == null || token.isEmpty()) {
-            return TOKEN_STATUS.Invalid;
+            return null;
         }
 
-        TOKEN_STATUS tokenStatus = TOKEN_STATUS.Invalid;
+        String username = null;
 
         try {
             Connection c = Database.getConnection();
-            PreparedStatement stmt = c.prepareStatement("SELECT ID,VALID_UNTIL FROM TOKENS WHERE TOKEN IS ?");
+            PreparedStatement stmt = c.prepareStatement("SELECT ID,USERNAME,VALID_UNTIL FROM TOKENS WHERE TOKEN IS ?");
 
             stmt.setString(1, token);
             ResultSet rs = stmt.executeQuery();
@@ -59,7 +54,7 @@ public class TokenChecker {
             while (rs.next()) {
                 if (rs.getLong("VALID_UNTIL") > Instant.now().getEpochSecond()) {
                     // token is valid
-                    tokenStatus = TOKEN_STATUS.Valid;
+                    username = rs.getString("USERNAME");
                     break;
                 } else {
                     // token expired
@@ -73,7 +68,7 @@ public class TokenChecker {
             e.printStackTrace();
         }
 
-        return tokenStatus;
+        return username;
     }
 
     private static void deleteToken(int tokenID) {
