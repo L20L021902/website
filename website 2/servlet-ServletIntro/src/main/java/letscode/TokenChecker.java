@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class TokenChecker {
@@ -43,6 +45,7 @@ public class TokenChecker {
         }
 
         String username = null;
+        List<Integer> old_tokens = new ArrayList<Integer>();
 
         try {
             Connection c = Database.getConnection();
@@ -58,12 +61,15 @@ public class TokenChecker {
                     break;
                 } else {
                     // token expired
-                    deleteToken(rs.getInt("ID"));
+                    old_tokens.add(rs.getInt("ID"));
                 }
             }
 
             stmt.close();
             c.close();
+
+            // delete old tokens if any
+            deleteToken(old_tokens);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -71,16 +77,24 @@ public class TokenChecker {
         return username;
     }
 
-    private static void deleteToken(int tokenID) {
+    private static void deleteToken(List<Integer> oldTokenIDs) {
+        if (oldTokenIDs.isEmpty()) { return; }
+
         try {
             Connection c = Database.getConnection();
-            PreparedStatement stmt = c.prepareStatement("DELETE FROM TOKENS WHERE ID is ?");
+            PreparedStatement stmt;
 
-            stmt.setInt(1, tokenID);
-            stmt.executeUpdate();
+            for (int tokenID: oldTokenIDs) {
+                stmt = c.prepareStatement("DELETE FROM TOKENS WHERE ID is ?");
 
-            stmt.close();
+                stmt.setInt(1, tokenID);
+                stmt.executeUpdate();
+
+                stmt.close();
+            }
+
             c.close();
+
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
