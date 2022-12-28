@@ -16,6 +16,15 @@ import java.util.Objects;
 public class TokenChecker {
 
     public static String authenticate(HttpServletRequest req, HttpServletResponse resp) {
+        if (req.getCookies() == null) {
+            try {
+                resp.sendRedirect("/login");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
         for (Cookie cookie: req.getCookies()) {
 
             if (Objects.equals(cookie.getName(), "token")) {
