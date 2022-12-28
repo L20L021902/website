@@ -60,4 +60,49 @@ public class Mock {
             e.printStackTrace();
         }
     }
+
+    public static void mockClients() {
+        try {
+            Connection c = Database.getConnection();
+            PreparedStatement stmt;
+
+            stmt = c.prepareStatement("INSERT OR IGNORE INTO CLIENTS VALUES (?,?,?,?,?,?)");
+
+            stmt.setInt(2, 233454);
+            stmt.setString(3, "Jack");
+            stmt.setString(4, "男");
+            stmt.setString(5, "大道街");
+            stmt.setLong(6, 13345676457L);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            stmt = c.prepareStatement("INSERT OR IGNORE INTO CLIENTS VALUES (?,?,?,?,?,?)");
+
+            stmt.setInt(2, 365478);
+            stmt.setString(3, "John");
+            stmt.setString(4, "男");
+            stmt.setString(5, "主体建筑天堂");
+            stmt.setLong(6, 13445576483L);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            stmt = c.prepareStatement("INSERT OR IGNORE INTO CLIENTS VALUES (?,?,?,?,?,?)");
+
+            stmt.setInt(2, 263559);
+            stmt.setString(3, "Olivia");
+            stmt.setString(4, "女");
+            stmt.setString(5, "通往大学的主要门户");
+            stmt.setLong(6, 13445576583L);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            c.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }

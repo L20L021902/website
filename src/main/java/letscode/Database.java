@@ -71,7 +71,7 @@ public class Database {
 
             // Clients
             stmt = c.createStatement();
-            sql = "CREATE TABLE IF NOT EXISTS SALES" +
+            sql = "CREATE TABLE IF NOT EXISTS CLIENTS" +
                     "(ID              INTEGER PRIMARY KEY," +
                     " CLIENT_ID       INTEGER    NOT NULL UNIQUE, " +
                     " NAME            TEXT NOT NULL, " +
@@ -134,8 +134,8 @@ public class Database {
                 goods.put("goods_id", rs.getInt("GOODS_ID"));
                 goods.put("name", rs.getString("NAME"));
                 goods.put("category", rs.getString("CATEGORY"));
-                goods.put("buy_price", rs.getString("BUY_PRICE"));
-                goods.put("sell_price", rs.getString("SELL_PRICE"));
+                goods.put("buy_price", rs.getInt("BUY_PRICE"));
+                goods.put("sell_price", rs.getInt("SELL_PRICE"));
                 goods.put("status", rs.getString("STATUS"));
                 goods.put("update_date", LocalDateTime.ofEpochSecond(rs.getLong("UPDATE_DATE"), 0, ZoneOffset.UTC).toString());
 
@@ -234,6 +234,37 @@ public class Database {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public static String getClients() {
+        try (
+                Connection c = getConnection();
+                Statement stmt = c.createStatement()
+        ){
+            ResultSet rs = stmt.executeQuery("SELECT CLIENT_ID,NAME,SEX,PHONE,ADDRESS FROM CLIENTS");
+
+            JSONArray clientsArray = new JSONArray();
+            while (rs.next()) {
+                JSONObject client = new JSONObject();
+
+                client.put("client_id", rs.getInt("CLIENT_ID"));
+                client.put("name", rs.getString("NAME"));
+                client.put("sex", rs.getString("SEX"));
+                client.put("address", rs.getString("ADDRESS"));
+                client.put("phone", rs.getLong("PHONE"));
+
+                clientsArray.add(client);
+            }
+
+            if (clientsArray.isEmpty()) {
+                return "";
+            } else {
+                return clientsArray.toJSONString();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

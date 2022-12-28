@@ -21,5 +21,6 @@ public class Start implements ServletContextListener {
         Registration.mockRegister();
 
         Mock.mockGoods();
+        Mock.mockClients();
     }
 }
