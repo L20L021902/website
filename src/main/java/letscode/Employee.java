@@ -45,6 +45,9 @@ public class Employee extends HttpServlet {
         }
 
         switch (req.getPathInfo()) {
+            case "/get":
+                getGoods(req, resp);
+                break;
             case "/add":
                 addGoods(req, resp);
                 break;
@@ -57,6 +60,24 @@ public class Employee extends HttpServlet {
             default:
                 resp.sendError(404);
                 break;
+        }
+    }
+
+    private static void getGoods(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            String json = Database.getGoods();
+            if (json == null) {
+                resp.sendError(500);
+                return;
+            }
+
+            resp.setStatus(200);
+            resp.setContentType("application/json");
+            PrintWriter out = resp.getWriter();
+            out.write(json);
+            out.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

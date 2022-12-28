@@ -10,6 +10,45 @@
 }
 ```
 
+## Get goods
+- Method: `POST`
+- Endpoint: `/employee/get`
+- **Response** Body:
+```json
+[
+  {
+    "sell_price": "6399",
+    "name": "Apple",
+    "goods_id": 567001231,
+    "buy_price": "5999",
+    "id": 1,
+    "category": "电子产品",
+    "update_date": "2022-10-23T16:15",
+    "status": "却贷"
+  },
+  {
+    "sell_price": "6",
+    "name": "圆规",
+    "goods_id": 456782345,
+    "buy_price": "3",
+    "id": 2,
+    "category": "文化用品",
+    "update_date": "2022-10-24T17:15",
+    "status": "有货"
+  },
+  {
+    "sell_price": "100",
+    "name": "布熊",
+    "goods_id": 667512945,
+    "buy_price": "50",
+    "id": 3,
+    "category": "玩具",
+    "update_date": "2022-10-24T17:18",
+    "status": "有货"
+  }
+]
+```
+
 ## Add goods
 - Method: `POST`
 - Endpoint: `/employee/add`
@@ -35,7 +74,7 @@
     "category": "电子产品",
     "buy_price": 5999,
     "sell_price": 6399,
-    "stock": 10
+    "stock": 0
 }
 ```
 
