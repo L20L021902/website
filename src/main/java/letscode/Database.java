@@ -19,7 +19,7 @@ public class Database {
                     " REALNAME           TEXT    NOT NULL, " +
                     " SEX                TEXT    NOT NULL, " +
                     " ADDRESS            TEXT    NOT NULL, " +
-                    " PHONE              NUMBER  NOT NULL, " +
+                    " PHONE              INTEGER  NOT NULL, " +
                     " CHECK (SEX in (\"男\",\"女\")));";
             stmt.executeUpdate(sql);
             stmt.close();
@@ -31,6 +31,48 @@ public class Database {
                     " USERNAME        TEXT    NOT NULL UNIQUE, " +
                     " TOKEN           TEXT    NOT NULL, " +
                     " VALID_UNTIL     INTEGER NOT NULL)";
+            stmt.executeUpdate(sql);
+            stmt.close();
+
+            // Goods
+            stmt = c.createStatement();
+            sql = "CREATE TABLE IF NOT EXISTS GOODS" +
+                    "(ID              INTEGER PRIMARY KEY," +
+                    " GOODS_ID        INTEGER    NOT NULL UNIQUE, " +
+                    " NAME            TEXT    NOT NULL, " +
+                    " CATEGORY        TEXT NOT NULL, " +
+                    " BUY_PRICE       INTEGER NOT NULL, " +
+                    " SELL_PRICE      INTEGER NOT NULL, " +
+                    " STOCK           INTEGER NOT NULL, " +
+                    " STATUS          TEXT NOT NULL, " +
+                    " UPDATE_DATE     INTEGER NOT NULL, " +
+                    " CHECK (STATUS in ('有货', '却贷')))";
+            stmt.executeUpdate(sql);
+            stmt.close();
+
+            // Sales
+            stmt = c.createStatement();
+            sql = "CREATE TABLE IF NOT EXISTS SALES" +
+                    "(ID              INTEGER PRIMARY KEY," +
+                    " ORDER_ID        INTEGER    NOT NULL UNIQUE, " +
+                    " CLIENT_ID       INTEGER    NOT NULL, " +
+                    " AMOUNT          INTEGER NOT NULL, " +
+                    " STATUS          TEXT NOT NULL, " +
+                    " ORDER_GOODS     TEXT NOT NULL, " +
+                    " UPDATE_DATE    INTEGER NOT NULL);";
+            stmt.executeUpdate(sql);
+            stmt.close();
+
+            // Clients
+            stmt = c.createStatement();
+            sql = "CREATE TABLE IF NOT EXISTS SALES" +
+                    "(ID              INTEGER PRIMARY KEY," +
+                    " CLIENT_ID       INTEGER    NOT NULL UNIQUE, " +
+                    " NAME            TEXT NOT NULL, " +
+                    " SEX             TEXT    NOT NULL, " +
+                    " ADDRESS         TEXT    NOT NULL, " +
+                    " PHONE           INTEGER  NOT NULL, " +
+                    " CHECK (SEX in (\"男\",\"女\")));";
             stmt.executeUpdate(sql);
             stmt.close();
 
