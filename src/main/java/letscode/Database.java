@@ -1,6 +1,12 @@
 package letscode;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.sql.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 public class Database {
 
@@ -111,5 +117,43 @@ public class Database {
         }
 
         return true;
+    }
+
+    public static String getGoods() {
+        try {
+            Connection c = getConnection();
+            Statement stmt = c.createStatement();
+
+            ResultSet rs = stmt.executeQuery("SELECT ID,GOODS_ID,NAME,CATEGORY,BUY_PRICE,SELL_PRICE,STATUS,UPDATE_DATE FROM GOODS");
+
+            JSONArray goodsArray = new JSONArray();
+            while (rs.next()) {
+                JSONObject goods = new JSONObject();
+
+                goods.put("id", rs.getInt("ID"));
+                goods.put("goods_id", rs.getInt("GOODS_ID"));
+                goods.put("name", rs.getString("NAME"));
+                goods.put("category", rs.getString("CATEGORY"));
+                goods.put("buy_price", rs.getString("BUY_PRICE"));
+                goods.put("sell_price", rs.getString("SELL_PRICE"));
+                goods.put("status", rs.getString("STATUS"));
+                goods.put("update_date", LocalDateTime.ofEpochSecond(rs.getLong("UPDATE_DATE"), 0, ZoneOffset.UTC).toString());
+
+                goodsArray.add(goods);
+            }
+
+            if (goodsArray.isEmpty()) {
+                stmt.close();
+                c.close();
+                return "";
+            } else {
+                stmt.close();
+                c.close();
+                return goodsArray.toJSONString();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
