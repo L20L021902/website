@@ -19,5 +19,7 @@ public class Start implements ServletContextListener {
             System.exit(-1);
         }
         Registration.mockRegister();
+
+        Mock.mockGoods();
     }
 }
