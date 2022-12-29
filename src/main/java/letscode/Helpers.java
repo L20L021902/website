@@ -13,7 +13,8 @@ public class Helpers {
         GovernmentClient,
         GovernmentGoods,
         InfoClient,
-        Stocks
+        Stocks,
+        Registration
     }
     public static String getWebpage(Webpage webpage) {
         InputStream inputStream;
@@ -37,6 +38,9 @@ public class Helpers {
                     break;
                 case Stocks:
                     inputStream = Files.newInputStream(Path.of("html/stocks/stocks.html"));
+                    break;
+                case Registration:
+                    inputStream = Files.newInputStream(Path.of("html/registration/registration.html"));
                     break;
                 default:
                     // Error
