@@ -80,7 +80,7 @@ public class Login extends HttpServlet {
         Connection c;
         PreparedStatement stmt;
         try {
-            c = Database.getConnection(username);
+            c = Database.getConnectionToMain();
 
             // check if there still is a valid token
             stmt = c.prepareStatement("SELECT TOKEN,VALID_UNTIL FROM TOKENS WHERE USERNAME is ?");
