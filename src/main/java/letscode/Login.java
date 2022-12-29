@@ -39,11 +39,13 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.print("Login attempt: ");
+        System.out.print("Login attempt for user ");
         try {
             JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
             String username = (String) json.get("username");
             String password = (String) json.get("password");
+
+            System.out.print(username);
 
             byte[] passwordHash = Helpers.getPasswordHash(password);
 

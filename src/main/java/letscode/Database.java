@@ -398,4 +398,36 @@ public class Database {
         }
 
     }
+
+    public static String fillWithUserData(String username, String webpage) {
+        try (
+                Connection c = getConnectionToMain();
+                PreparedStatement stmt = c.prepareStatement("SELECT * FROM USERS WHERE USERNAME is ?")
+        ){
+            stmt.setString(1, username);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (!rs.next()) { return null; }
+
+            StringBuilder filledWebpage = new StringBuilder(webpage);
+            Helpers.replaceOnce(filledWebpage, "$(username)", username);
+            Helpers.replaceOnce(filledWebpage, "$(id)", Integer.toString(rs.getInt("ID")));
+            Helpers.replaceOnce(filledWebpage, "$(realname)", rs.getString("REALNAME"));
+            if (rs.getString("SEX").equals("男")) {
+                Helpers.replaceOnce(filledWebpage, "$(male)", "selected");
+                Helpers.replaceOnce(filledWebpage, "$(female)", "");
+            } else {
+                Helpers.replaceOnce(filledWebpage, "$(male)", "");
+                Helpers.replaceOnce(filledWebpage, "$(female)", "selected");
+            }
+            Helpers.replaceOnce(filledWebpage, "$(address)", rs.getString("ADDRESS"));
+            Helpers.replaceOnce(filledWebpage, "$(phone)", Long.toString(rs.getLong("PHONE")));
+
+            return filledWebpage.toString();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

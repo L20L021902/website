@@ -27,6 +27,7 @@ public class Indexclient extends HttpServlet {
         assert content != null;
 
         // TODO replace placeholders
+        content = Database.fillWithUserData(username, content);
 
         resp.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = resp.getWriter()) {

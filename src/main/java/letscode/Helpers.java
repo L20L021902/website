@@ -102,4 +102,11 @@ public class Helpers {
             throw new RuntimeException(e);
         }
     }
+
+    public static void replaceOnce(StringBuilder builder, String from, String to) {
+        int index = builder.indexOf(from);
+        if (index != -1) {
+            builder.replace(index, index + from.length(), to);
+        }
+    }
 }
