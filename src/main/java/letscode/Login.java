@@ -46,8 +46,7 @@ public class Login extends HttpServlet {
             String username = (String) json.get("username");
             String password = (String) json.get("password");
 
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] passwordHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            byte[] passwordHash = Helpers.getPasswordHash(password);
 
             // Checking user + pass
             if (checkPassword(username, passwordHash)) {
@@ -68,7 +67,7 @@ public class Login extends HttpServlet {
                 resp.sendError(403);
             }
 
-        } catch (ParseException | NoSuchAlgorithmException e) {
+        } catch (ParseException e) {
             resp.sendError(500);
         }
 

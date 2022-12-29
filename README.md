@@ -1,3 +1,15 @@
+## Registration
+
+- Method: `POST`
+- Endpoint: `/registration/register`
+- Body:
+```json
+{
+	"username": "admin",
+	"password": "password"
+}
+```
+
 ## Authentication
 
 - Method: `POST`

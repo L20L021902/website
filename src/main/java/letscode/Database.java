@@ -81,10 +81,10 @@ public class Database {
                     "(ID INTEGER PRIMARY KEY," +
                     " USERNAME           TEXT    NOT NULL UNIQUE, " +
                     " PASSWORD           BLOB    NOT NULL, " + // Hashed password
-                    " REALNAME           TEXT    NOT NULL, " +
-                    " SEX                TEXT    NOT NULL, " +
-                    " ADDRESS            TEXT    NOT NULL, " +
-                    " PHONE              INTEGER  NOT NULL, " +
+                    " REALNAME           TEXT, " +
+                    " SEX                TEXT, " +
+                    " ADDRESS            TEXT, " +
+                    " PHONE              INTEGER, " +
                     " CHECK (SEX in ('男','女')));";
             stmt.executeUpdate(sql);
             stmt.close();
@@ -379,5 +379,23 @@ public class Database {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static boolean registerUser(String username, String password) {
+        try (
+                Connection c = getConnectionToMain();
+                PreparedStatement stmt = c.prepareStatement("INSERT INTO USERS VALUES (?,?,?,?,?,?,?)")
+        ){
+            stmt.setString(2, username);
+            stmt.setBytes(3, Helpers.getPasswordHash(password));
+
+            stmt.executeUpdate();
+
+            return initTables(username);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }
