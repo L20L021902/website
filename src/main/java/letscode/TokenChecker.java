@@ -91,7 +91,7 @@ public class TokenChecker {
         return username;
     }
 
-    private static void deleteToken(List<Integer> oldTokenIDs) {
+    public static void deleteToken(List<Integer> oldTokenIDs) {
         if (oldTokenIDs.isEmpty()) { return; }
 
         try {

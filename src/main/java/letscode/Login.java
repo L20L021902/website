@@ -17,6 +17,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @WebServlet(urlPatterns = {"/login", "/login/*", ""})
@@ -75,6 +77,7 @@ public class Login extends HttpServlet {
 
     private static String generateToken(String username) {
         String token;
+        List<Integer> old_tokens = new ArrayList<Integer>();
 
         // Save token in the database
         Connection c;
@@ -83,7 +86,7 @@ public class Login extends HttpServlet {
             c = Database.getConnectionToMain();
 
             // check if there still is a valid token
-            stmt = c.prepareStatement("SELECT TOKEN,VALID_UNTIL FROM TOKENS WHERE USERNAME is ?");
+            stmt = c.prepareStatement("SELECT ID,TOKEN,VALID_UNTIL FROM TOKENS WHERE USERNAME is ?");
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -93,10 +96,16 @@ public class Login extends HttpServlet {
                     stmt.close();
                     c.close();
                     return token;
+                } else {
+                    // token expired
+                    old_tokens.add(rs.getInt("ID"));
                 }
             }
 
             stmt.close();
+
+            // delete old tokens if any
+            TokenChecker.deleteToken(old_tokens);
 
             // no valid token found, generating a new one
             token = UUID.randomUUID().toString();
