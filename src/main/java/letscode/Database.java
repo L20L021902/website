@@ -411,7 +411,8 @@ public class Database {
             if (!rs.next()) { return null; }
 
             StringBuilder filledWebpage = new StringBuilder(webpage);
-            Helpers.replaceOnce(filledWebpage, "$(username)", username);
+            Helpers.replaceOnce(filledWebpage, "$(username)", username); // first place
+            Helpers.replaceOnce(filledWebpage, "$(username)", username); // second place
             Helpers.replaceOnce(filledWebpage, "$(id)", Integer.toString(rs.getInt("ID")));
             Helpers.replaceOnce(filledWebpage, "$(realname)", rs.getString("REALNAME"));
             if (rs.getString("SEX").equals("男")) {
