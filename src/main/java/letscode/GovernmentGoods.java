@@ -26,4 +26,43 @@ public class GovernmentGoods extends HttpServlet {
             out.write(content);
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // Check authorization
+        String username = TokenChecker.authenticate(req, resp);
+        if (username == null) { return; }
+
+        if (req.getPathInfo() == null) {
+            resp.sendError(404);
+            return;
+        }
+
+        switch (req.getPathInfo()) {
+            case "/get":
+                getSales(req, resp);
+                break;
+            default:
+                resp.sendError(404);
+                break;
+        }
+    }
+
+    private static void getSales(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            String json = Database.getSales();
+            if (json == null) {
+                resp.sendError(500);
+                return;
+            }
+
+            resp.setStatus(200);
+            resp.setContentType("application/json");
+            try (PrintWriter out = resp.getWriter()) {
+                out.write(json);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
