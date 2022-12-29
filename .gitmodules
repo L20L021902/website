@@ -1,3 +1,4 @@
-[submodule "website 2/servlet-ServletIntro/html"]
+[submodule "html"]
 	path = html
+	branch = master
 	url = https://github.com/L20L021901Daniel/-
