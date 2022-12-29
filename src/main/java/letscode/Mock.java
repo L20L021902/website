@@ -10,9 +10,9 @@ import java.time.Instant;
 
 public class Mock {
 
-    public static void mockGoods() {
+    public static void mockGoods(String username) {
         try {
-            Connection c = Database.getConnection();
+            Connection c = Database.getConnection(username);
             PreparedStatement stmt;
 
             stmt = c.prepareStatement("INSERT OR IGNORE INTO GOODS VALUES (?,?,?,?,?,?,?,?,?)");
@@ -64,9 +64,9 @@ public class Mock {
         }
     }
 
-    public static void mockClients() {
+    public static void mockClients(String username) {
         try {
-            Connection c = Database.getConnection();
+            Connection c = Database.getConnection(username);
             PreparedStatement stmt;
 
             stmt = c.prepareStatement("INSERT OR IGNORE INTO CLIENTS VALUES (?,?,?,?,?,?)");
@@ -111,7 +111,7 @@ public class Mock {
 
     public static void mockRegister() {
         try {
-            Connection c = Database.getConnection();
+            Connection c = Database.getConnectionToMain();
             PreparedStatement stmt = c.prepareStatement("insert or ignore into USERS values (?,?,?,?,?,?,?)");
 
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");

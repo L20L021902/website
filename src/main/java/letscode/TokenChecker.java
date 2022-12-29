@@ -62,7 +62,7 @@ public class TokenChecker {
         List<Integer> old_tokens = new ArrayList<Integer>();
 
         try {
-            Connection c = Database.getConnection();
+            Connection c = Database.getConnectionToMain();
             PreparedStatement stmt = c.prepareStatement("SELECT ID,USERNAME,VALID_UNTIL FROM TOKENS WHERE TOKEN IS ?");
 
             stmt.setString(1, token);
@@ -95,7 +95,7 @@ public class TokenChecker {
         if (oldTokenIDs.isEmpty()) { return; }
 
         try {
-            Connection c = Database.getConnection();
+            Connection c = Database.getConnectionToMain();
             PreparedStatement stmt;
 
             for (int tokenID: oldTokenIDs) {

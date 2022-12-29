@@ -40,7 +40,7 @@ public class GovernmentGoods extends HttpServlet {
 
         switch (req.getPathInfo()) {
             case "/get":
-                getSales(req, resp);
+                getSales(username, req, resp);
                 break;
             default:
                 resp.sendError(404);
@@ -48,9 +48,9 @@ public class GovernmentGoods extends HttpServlet {
         }
     }
 
-    private static void getSales(HttpServletRequest req, HttpServletResponse resp) {
+    private static void getSales(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
-            String json = Database.getSales();
+            String json = Database.getSales(username);
             if (json == null) {
                 resp.sendError(500);
                 return;

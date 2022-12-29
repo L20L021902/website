@@ -13,14 +13,19 @@ public class Start implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent arg0) {
-        //Init database tables
-        if (!Database.initTables()) {
+        //Init main database tables
+        if (!Database.initTablesMain()) {
             System.out.println("Couldn't init databases!");
             System.exit(-1);
         }
 
         Mock.mockRegister();
-        Mock.mockGoods();
-        Mock.mockClients();
+        //Init database tables
+        if (!Database.initTables("admin")) {
+            System.out.println("Couldn't init databases!");
+            System.exit(-1);
+        }
+        Mock.mockGoods("admin");
+        Mock.mockClients("admin");
     }
 }

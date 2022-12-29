@@ -3,46 +3,24 @@ package letscode;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 public class Database {
 
-    public static boolean initTables() {
+    public static boolean initTables(String username) {
         Connection c;
         Statement stmt;
         try {
-            c = getConnection();
-
-            // Users
-            stmt = c.createStatement();
-            String sql = "CREATE TABLE IF NOT EXISTS USERS" +
-                    "(ID INTEGER PRIMARY KEY," +
-                    " USERNAME           TEXT    NOT NULL UNIQUE, " +
-                    " PASSWORD           BLOB    NOT NULL, " + // Hashed password
-                    " REALNAME           TEXT    NOT NULL, " +
-                    " SEX                TEXT    NOT NULL, " +
-                    " ADDRESS            TEXT    NOT NULL, " +
-                    " PHONE              INTEGER  NOT NULL, " +
-                    " CHECK (SEX in (\"男\",\"女\")));";
-            stmt.executeUpdate(sql);
-            stmt.close();
-
-            // Logged in tokens
-            stmt = c.createStatement();
-            sql = "CREATE TABLE IF NOT EXISTS TOKENS" +
-                    "(ID INTEGER PRIMARY KEY," +
-                    " USERNAME        TEXT    NOT NULL UNIQUE, " +
-                    " TOKEN           TEXT    NOT NULL, " +
-                    " VALID_UNTIL     INTEGER NOT NULL)";
-            stmt.executeUpdate(sql);
-            stmt.close();
+            c = getConnection(username);
 
             // Goods
             stmt = c.createStatement();
-            sql = "CREATE TABLE IF NOT EXISTS GOODS" +
+            String sql = "CREATE TABLE IF NOT EXISTS GOODS" +
                     "(ID              INTEGER PRIMARY KEY," +
                     " GOODS_ID        INTEGER    NOT NULL UNIQUE, " +
                     " NAME            TEXT    NOT NULL, " +
@@ -78,7 +56,7 @@ public class Database {
                     " SEX             TEXT    NOT NULL, " +
                     " ADDRESS         TEXT    NOT NULL, " +
                     " PHONE           INTEGER  NOT NULL, " +
-                    " CHECK (SEX in (\"男\",\"女\")));";
+                    " CHECK (SEX in ('男','女')));";
             stmt.executeUpdate(sql);
             stmt.close();
 
@@ -91,14 +69,67 @@ public class Database {
         return true;
     }
 
-    public static Connection getConnection() throws ClassNotFoundException, SQLException {
+    public static boolean initTablesMain() {
+        Connection c;
+        Statement stmt;
+        try {
+            c = getConnectionToMain();
+
+            // Users
+            stmt = c.createStatement();
+            String sql = "CREATE TABLE IF NOT EXISTS USERS" +
+                    "(ID INTEGER PRIMARY KEY," +
+                    " USERNAME           TEXT    NOT NULL UNIQUE, " +
+                    " PASSWORD           BLOB    NOT NULL, " + // Hashed password
+                    " REALNAME           TEXT    NOT NULL, " +
+                    " SEX                TEXT    NOT NULL, " +
+                    " ADDRESS            TEXT    NOT NULL, " +
+                    " PHONE              INTEGER  NOT NULL, " +
+                    " CHECK (SEX in ('男','女')));";
+            stmt.executeUpdate(sql);
+            stmt.close();
+
+            // Logged in tokens
+            stmt = c.createStatement();
+            sql = "CREATE TABLE IF NOT EXISTS TOKENS" +
+                    "(ID INTEGER PRIMARY KEY," +
+                    " USERNAME        TEXT    NOT NULL UNIQUE, " +
+                    " TOKEN           TEXT    NOT NULL, " +
+                    " VALID_UNTIL     INTEGER NOT NULL)";
+            stmt.executeUpdate(sql);
+            stmt.close();
+            c.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public static Connection getConnection(String username) throws ClassNotFoundException, SQLException {
+        // get username hash
+        String usernameHash;
+        try {
+            usernameHash = Helpers.bytesToHex(MessageDigest.getInstance("MD5")
+                    .digest(username.getBytes(StandardCharsets.UTF_8)));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+
         Class.forName("org.sqlite.JDBC");
-        return DriverManager.getConnection("jdbc:sqlite:database.db");
+        return DriverManager.getConnection(String.format("jdbc:sqlite:userdatabases/%s.db", usernameHash));
+    }
+
+    public static Connection getConnectionToMain() throws ClassNotFoundException, SQLException {
+        Class.forName("org.sqlite.JDBC");
+        return DriverManager.getConnection("jdbc:sqlite:main.db");
     }
 
     public static boolean updateUserInfo(String username, String realname, String sex, String address, long phone) {
         try {
-            Connection c = getConnection();
+            Connection c = getConnection(username);
             PreparedStatement stmt = c.prepareStatement("UPDATE USERS SET REALNAME = ?, SEX = ?, ADDRESS = ?, PHONE = ? WHERE USERNAME is ?");
 
             stmt.setString(1, realname);
@@ -119,9 +150,9 @@ public class Database {
         return true;
     }
 
-    public static String getGoods() {
+    public static String getGoods(String username) {
         try {
-            Connection c = getConnection();
+            Connection c = getConnection(username);
             Statement stmt = c.createStatement();
 
             ResultSet rs = stmt.executeQuery("SELECT ID,GOODS_ID,NAME,CATEGORY,BUY_PRICE,SELL_PRICE,STATUS,UPDATE_DATE FROM GOODS");
@@ -157,14 +188,14 @@ public class Database {
         }
     }
 
-    public static boolean addGoods(int goodsID, String name, String category, int buyPrice, int sellPrice, int stock,
+    public static boolean addGoods(String username, int goodsID, String name, String category, int buyPrice, int sellPrice, int stock,
                                    String status, long updateDate) {
 
         if (goodsID == 0 || name == null || category == null || buyPrice == 0 || sellPrice == 0 || status == null || updateDate == 0) {
             return false;
         }
 
-        try (Connection c = Database.getConnection()) {
+        try (Connection c = Database.getConnection(username)) {
             PreparedStatement stmt = c.prepareStatement("INSERT INTO GOODS VALUES (?,?,?,?,?,?,?,?,?)");
 
             stmt.setInt(2, goodsID);
@@ -186,14 +217,14 @@ public class Database {
         }
     }
 
-    public static boolean updateGoods(int goodsID, String name, String category, int buyPrice, int sellPrice, int stock,
+    public static boolean updateGoods(String username, int goodsID, String name, String category, int buyPrice, int sellPrice, int stock,
                                    String status, long updateDate) {
 
         if (goodsID == 0 || name == null || category == null || buyPrice == 0 || sellPrice == 0 || status == null || updateDate == 0) {
             return false;
         }
 
-        try (Connection c = Database.getConnection()) {
+        try (Connection c = Database.getConnection(username)) {
             PreparedStatement stmt = c.prepareStatement("UPDATE GOODS SET NAME = ?, CATEGORY = ?, BUY_PRICE = ?, SELL_PRICE = ?," +
                     "STOCK = ?, STATUS = ?, UPDATE_DATE = ? WHERE GOODS_ID is ?");
 
@@ -216,13 +247,13 @@ public class Database {
         }
     }
 
-    public static boolean deleteGoods(int goodsID) {
+    public static boolean deleteGoods(String username, int goodsID) {
 
         if (goodsID == 0) {
             return false;
         }
 
-        try (Connection c = Database.getConnection()) {
+        try (Connection c = Database.getConnection(username)) {
             PreparedStatement stmt = c.prepareStatement("DELETE FROM GOODS WHERE GOODS_ID is ?");
 
             stmt.setInt(1, goodsID);
@@ -237,9 +268,9 @@ public class Database {
         }
     }
 
-    public static String getClients() {
+    public static String getClients(String username) {
         try (
-                Connection c = getConnection();
+                Connection c = getConnection(username);
                 Statement stmt = c.createStatement()
         ){
             ResultSet rs = stmt.executeQuery("SELECT CLIENT_ID,NAME,SEX,PHONE,ADDRESS FROM CLIENTS");
@@ -268,13 +299,13 @@ public class Database {
         }
     }
 
-    public static boolean addClient(int clientID, String name, String sex, String address, long phone) {
+    public static boolean addClient(String username, int clientID, String name, String sex, String address, long phone) {
 
         if (clientID == 0 || name == null || sex == null || address == null || phone == 0) {
             return false;
         }
 
-        try (Connection c = Database.getConnection()) {
+        try (Connection c = Database.getConnection(username)) {
             PreparedStatement stmt = c.prepareStatement("INSERT INTO CLIENTS VALUES (?,?,?,?,?,?)");
 
             stmt.setInt(2, clientID);
@@ -293,13 +324,13 @@ public class Database {
         }
     }
 
-    public static boolean updateClient(int clientID, String name, String sex, String address, long phone) {
+    public static boolean updateClient(String username, int clientID, String name, String sex, String address, long phone) {
 
         if (clientID == 0 || name == null || sex == null || address == null || phone == 0) {
             return false;
         }
 
-        try (Connection c = Database.getConnection()) {
+        try (Connection c = Database.getConnection(username)) {
             PreparedStatement stmt = c.prepareStatement("UPDATE CLIENTS SET NAME = ?, SEX = ?, ADDRESS = ?, PHONE = ? WHERE CLIENT_ID = ?");
 
             stmt.setString(1, name);
@@ -315,6 +346,38 @@ public class Database {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public static String getSales(String username) {
+        try (
+                Connection c = getConnection(username);
+                Statement stmt = c.createStatement()
+        ){
+            ResultSet rs = stmt.executeQuery("SELECT ID,ORDER_ID,CLIENT_ID,AMOUNT,STATUS,UPDATE_DATE FROM SALES");
+
+            JSONArray salesArray = new JSONArray();
+            while (rs.next()) {
+                JSONObject sale = new JSONObject();
+
+                sale.put("id", rs.getInt("ID"));
+                sale.put("order_id", rs.getInt("ORDER_ID"));
+                sale.put("client_id", rs.getInt("CLIENT_ID"));
+                sale.put("amount", rs.getLong("AMOUNT"));
+                sale.put("status", rs.getString("STATUS"));
+                sale.put("update_date", LocalDateTime.ofEpochSecond(rs.getLong("UPDATE_DATE"), 0, ZoneOffset.UTC).toString());
+
+                salesArray.add(sale);
+            }
+
+            if (salesArray.isEmpty()) {
+                return "";
+            } else {
+                return salesArray.toJSONString();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

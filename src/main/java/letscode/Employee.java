@@ -46,16 +46,16 @@ public class Employee extends HttpServlet {
 
         switch (req.getPathInfo()) {
             case "/get":
-                getGoods(req, resp);
+                getGoods(username, req, resp);
                 break;
             case "/add":
-                addGoods(req, resp);
+                addGoods(username, req, resp);
                 break;
             case "/update":
-                updateGoods(req, resp);
+                updateGoods(username, req, resp);
                 break;
             case "/delete":
-                deleteGoods(req, resp);
+                deleteGoods(username, req, resp);
                 break;
             default:
                 resp.sendError(404);
@@ -63,9 +63,9 @@ public class Employee extends HttpServlet {
         }
     }
 
-    private static void getGoods(HttpServletRequest req, HttpServletResponse resp) {
+    private static void getGoods(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
-            String json = Database.getGoods();
+            String json = Database.getGoods(username);
             if (json == null) {
                 resp.sendError(500);
                 return;
@@ -81,11 +81,12 @@ public class Employee extends HttpServlet {
         }
     }
 
-    private static void addGoods(HttpServletRequest req, HttpServletResponse resp) {
+    private static void addGoods(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
             JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
 
             if (!Database.addGoods(
+                    username,
                     (int) json.get("goods_id"),
                     (String) json.get("name"),
                     (String) json.get("category"),
@@ -104,11 +105,12 @@ public class Employee extends HttpServlet {
         }
     }
 
-    private static void updateGoods(HttpServletRequest req, HttpServletResponse resp) {
+    private static void updateGoods(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
             JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
 
             if (!Database.updateGoods(
+                    username,
                     (int) json.get("goods_id"),
                     (String) json.get("name"),
                     (String) json.get("category"),
@@ -127,11 +129,12 @@ public class Employee extends HttpServlet {
         }
     }
 
-    private static void deleteGoods(HttpServletRequest req, HttpServletResponse resp) {
+    private static void deleteGoods(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
             JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
 
             if (!Database.deleteGoods(
+                    username,
                     (int) json.get("goods_id")
             )) {
                 resp.sendError(400);

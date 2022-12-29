@@ -45,13 +45,13 @@ public class GovernmentClient extends HttpServlet {
 
         switch (req.getPathInfo()) {
             case "/get":
-                getClients(req, resp);
+                getClients(username, req, resp);
                 break;
             case "/add":
-                addClient(req, resp);
+                addClient(username, req, resp);
                 break;
             case "/update":
-                updateClient(req, resp);
+                updateClient(username, req, resp);
                 break;
             default:
                 resp.sendError(404);
@@ -59,9 +59,9 @@ public class GovernmentClient extends HttpServlet {
         }
     }
 
-    private static void getClients(HttpServletRequest req, HttpServletResponse resp) {
+    private static void getClients(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
-            String json = Database.getClients();
+            String json = Database.getClients(username);
             if (json == null) {
                 resp.sendError(500);
                 return;
@@ -77,11 +77,12 @@ public class GovernmentClient extends HttpServlet {
         }
     }
 
-    private static void addClient(HttpServletRequest req, HttpServletResponse resp) {
+    private static void addClient(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
             JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
 
             if (!Database.addClient(
+                    username,
                     (int) json.get("client_id"),
                     (String) json.get("name"),
                     (String) json.get("sex"),
@@ -97,11 +98,12 @@ public class GovernmentClient extends HttpServlet {
         }
     }
 
-    private static void updateClient(HttpServletRequest req, HttpServletResponse resp) {
+    private static void updateClient(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
             JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
 
             if (!Database.updateClient(
+                    username,
                     (int) json.get("client_id"),
                     (String) json.get("name"),
                     (String) json.get("sex"),

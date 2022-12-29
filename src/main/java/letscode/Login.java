@@ -81,7 +81,7 @@ public class Login extends HttpServlet {
         Connection c;
         PreparedStatement stmt;
         try {
-            c = Database.getConnection();
+            c = Database.getConnection(username);
 
             // check if there still is a valid token
             stmt = c.prepareStatement("SELECT TOKEN,VALID_UNTIL FROM TOKENS WHERE USERNAME is ?");
@@ -123,7 +123,7 @@ public class Login extends HttpServlet {
         PreparedStatement stmt;
         boolean userFound = false;
         try {
-            c = Database.getConnection();
+            c = Database.getConnectionToMain();
 
             stmt = c.prepareStatement("SELECT ID FROM USERS WHERE USERNAME is ? AND PASSWORD is ?");
             stmt.setString(1, username);
