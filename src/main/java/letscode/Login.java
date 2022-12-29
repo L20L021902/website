@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -42,7 +39,7 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("Login attempt");
+        System.out.print("Login attempt: ");
         try {
             JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
             String username = (String) json.get("username");
@@ -55,6 +52,7 @@ public class Login extends HttpServlet {
                 String token = generateToken(username);
                 if (token == null) {
                     resp.sendError(500);
+                    System.out.println("unsuccessful");
                     return;
                 }
 
@@ -64,13 +62,16 @@ public class Login extends HttpServlet {
 
                 // Redirecting to Client Info page
                 resp.sendRedirect("/infocient/indexclient.html");
+                System.out.println("successful");
             } else {
                 // Wrong password
                 resp.sendError(403);
+                System.out.println("unsuccessful");
             }
 
         } catch (ParseException e) {
             resp.sendError(500);
+            System.out.println("unsuccessful");
         }
 
     }

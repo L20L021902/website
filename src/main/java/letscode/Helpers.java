@@ -20,6 +20,7 @@ public class Helpers {
         Registration
     }
     public static String getWebpage(Webpage webpage) {
+        System.out.println("Getting webpage: " + webpage.name());
         InputStream inputStream;
 
         try {
