@@ -43,7 +43,7 @@ public class GovernmentGoods extends HttpServlet {
                 getSales(username, req, resp);
                 break;
             default:
-                resp.sendError(404);
+                doGet(req, resp);
                 break;
         }
     }

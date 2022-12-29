@@ -37,7 +37,7 @@ public class Registration extends HttpServlet {
                 register(req, resp);
                 break;
             default:
-                resp.sendError(404);
+                doGet(req, resp);
                 break;
         }
     }

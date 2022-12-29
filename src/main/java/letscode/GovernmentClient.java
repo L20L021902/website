@@ -54,7 +54,7 @@ public class GovernmentClient extends HttpServlet {
                 updateClient(username, req, resp);
                 break;
             default:
-                resp.sendError(404);
+                doGet(req, resp);
                 break;
         }
     }

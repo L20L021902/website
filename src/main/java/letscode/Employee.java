@@ -58,7 +58,7 @@ public class Employee extends HttpServlet {
                 deleteGoods(username, req, resp);
                 break;
             default:
-                resp.sendError(404);
+                doGet(req, resp);
                 break;
         }
     }
