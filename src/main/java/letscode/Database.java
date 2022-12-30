@@ -411,21 +411,22 @@ public class Database {
             if (!rs.next()) { return null; }
 
             StringBuilder filledWebpage = new StringBuilder(webpage);
+
             Helpers.replaceOnce(filledWebpage, "$(username)", username); // first place
             Helpers.replaceOnce(filledWebpage, "$(username)", username); // second place
+            Helpers.replaceOnce(filledWebpage, "$(username)", username); // third place
+
             Helpers.replaceOnce(filledWebpage, "$(id)", Integer.toString(rs.getInt("ID")));
+
             Helpers.replaceOnce(filledWebpage, "$(realname)", rs.getString("REALNAME"));
-            if (rs.getString("SEX") == null) {
-                Helpers.replaceOnce(filledWebpage, "$(male)", "");
-                Helpers.replaceOnce(filledWebpage, "$(female)", "");
-            } else if (rs.getString("SEX").equals("男")) {
-                Helpers.replaceOnce(filledWebpage, "$(male)", "selected");
-                Helpers.replaceOnce(filledWebpage, "$(female)", "");
-            } else {
-                Helpers.replaceOnce(filledWebpage, "$(male)", "");
-                Helpers.replaceOnce(filledWebpage, "$(female)", "selected");
-            }
+
+            String sex = rs.getString("SEX");
+            Helpers.replaceOnce(filledWebpage, "$(nosex)", sex == null ? "selected" : "");
+            Helpers.replaceOnce(filledWebpage, "$(male)", sex != null  && sex.equals("男") ? "selected" : "");
+            Helpers.replaceOnce(filledWebpage, "$(female)", sex != null  && sex.equals("女") ? "selected" : "");
+
             Helpers.replaceOnce(filledWebpage, "$(address)", rs.getString("ADDRESS"));
+
             Helpers.replaceOnce(filledWebpage, "$(phone)", Long.toString(rs.getLong("PHONE")));
 
             return filledWebpage.toString();

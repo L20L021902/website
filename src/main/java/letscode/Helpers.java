@@ -104,7 +104,8 @@ public class Helpers {
     }
 
     public static void replaceOnce(StringBuilder builder, String from, String to) {
-        if (from == null || to == null) { return; }
+        if (from == null) { return; }
+        if (to == null)  { to = ""; }
 
         int index = builder.indexOf(from);
         if (index != -1) {
