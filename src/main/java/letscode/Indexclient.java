@@ -60,7 +60,9 @@ public class Indexclient extends HttpServlet {
 
     private static void updateUserInfo(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
-            JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
+            String jsonStr = Helpers.readFromInputStream(req.getInputStream());
+            System.out.println(jsonStr);
+            JSONObject json = (JSONObject) new JSONParser().parse(jsonStr);
 
             String realname = (String) json.get("realname");
             String sex = (String) json.get("sex");
