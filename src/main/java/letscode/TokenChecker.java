@@ -92,6 +92,8 @@ public class TokenChecker {
             e.printStackTrace();
         }
 
+        System.out.printf("Token presented was: %s, found username: %s%n", token, username == null ? "null" : username);
+
         return username;
     }
 
