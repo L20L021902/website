@@ -52,10 +52,10 @@ public class Registration extends HttpServlet {
             )) {
                 resp.sendError(400);
             } else {
-                resp.sendRedirect("/login");
+                resp.setStatus(200);
             }
         } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
