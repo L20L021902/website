@@ -54,7 +54,7 @@ public class Login extends HttpServlet {
                 String token = generateToken(username);
                 if (token == null) {
                     resp.sendError(500);
-                    System.out.println("unsuccessful");
+                    System.out.println(" unsuccessful");
                     return;
                 }
 
@@ -64,11 +64,11 @@ public class Login extends HttpServlet {
 
                 // Redirecting to Client Info page
                 resp.sendRedirect("/infocient/indexclient.html");
-                System.out.println("successful");
+                System.out.println(" successful");
             } else {
                 // Wrong password
                 resp.sendError(403);
-                System.out.println("unsuccessful");
+                System.out.println(" unsuccessful");
             }
 
         } catch (ParseException e) {
