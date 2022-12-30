@@ -129,7 +129,7 @@ public class Database {
 
     public static boolean updateUserInfo(String username, String realname, String sex, String address, long phone) {
         try {
-            Connection c = getConnection(username);
+            Connection c = getConnectionToMain();
             PreparedStatement stmt = c.prepareStatement("UPDATE USERS SET REALNAME = ?, SEX = ?, ADDRESS = ?, PHONE = ? WHERE USERNAME is ?");
 
             stmt.setString(1, realname);
