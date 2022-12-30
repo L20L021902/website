@@ -82,6 +82,8 @@ public class Login extends HttpServlet {
         String token;
         List<Integer> old_tokens = new ArrayList<Integer>();
 
+        System.out.println("Generating new token");
+
         // Save token in the database
         Connection c;
         PreparedStatement stmt;
@@ -98,6 +100,7 @@ public class Login extends HttpServlet {
                     token = rs.getString("TOKEN");
                     stmt.close();
                     c.close();
+                    System.out.printf("Found a still valid token %s, sending to the client%n", token);
                     return token;
                 } else {
                     // token expired
@@ -121,6 +124,8 @@ public class Login extends HttpServlet {
 
             stmt.close();
             c.close();
+
+            System.out.printf("Generated new token %s valid until %d%n", token, Instant.now().getEpochSecond() + 3600);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
