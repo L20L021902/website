@@ -60,16 +60,14 @@ public class Indexclient extends HttpServlet {
 
     private static void updateUserInfo(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
-            String jsonStr = Helpers.readFromInputStream(req.getInputStream());
-            System.out.println(jsonStr);
-            JSONObject json = (JSONObject) new JSONParser().parse(jsonStr);
+            JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
 
             String realname = (String) json.get("realname");
             String sex = (String) json.get("sex");
             String address = (String) json.get("address");
             long phone = (long) json.get("phone");
 
-            if (realname == null || sex == null || address == null || phone == 0) {
+            if (realname == null || sex == null || address == null) {
                 resp.sendError(400);
                 return;
             }
