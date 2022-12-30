@@ -60,10 +60,8 @@ public class Login extends HttpServlet {
 
                 // Sending token cookie to user
                 Cookie tokenCookie = new Cookie("token", token);
-                tokenCookie.setPath("/"); // fix for cookie value not changing
                 tokenCookie.setMaxAge(3600); // one hour
                 resp.addCookie(tokenCookie);
-                System.out.println(resp);
 
                 // Redirecting to Client Info page
                 resp.sendRedirect("/infocient/indexclient.html");
