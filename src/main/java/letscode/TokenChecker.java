@@ -17,6 +17,7 @@ public class TokenChecker {
 
     public static String authenticate(HttpServletRequest req, HttpServletResponse resp) {
         if (req.getCookies() == null) {
+            System.out.println("No cookies were sent with the request");
             try {
                 resp.sendRedirect("/login");
             } catch (IOException e) {
@@ -55,6 +56,7 @@ public class TokenChecker {
 
     private static String checkToken(String token) {
         if (token == null || token.isEmpty()) {
+            System.out.println("Token was empty");
             return null;
         }
 
@@ -71,10 +73,12 @@ public class TokenChecker {
             while (rs.next()) {
                 if (rs.getLong("VALID_UNTIL") > Instant.now().getEpochSecond()) {
                     // token is valid
+                    System.out.println("Valid token was presented");
                     username = rs.getString("USERNAME");
                     break;
                 } else {
                     // token expired
+                    System.out.println("Expired token was presented");
                     old_tokens.add(rs.getInt("ID"));
                 }
             }

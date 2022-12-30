@@ -21,12 +21,14 @@ public class Indexclient extends HttpServlet {
 
         // Check authorization
         String username = TokenChecker.authenticate(req, resp);
-        if (username == null) { return; }
+        if (username == null) {
+            System.out.println("Invalid token presented while getting /indexclient.html");
+            return;
+        }
 
         String content = Helpers.getWebpage(Helpers.Webpage.InfoClient);
         assert content != null;
 
-        // TODO replace placeholders
         content = Database.fillWithUserData(username, content);
 
         resp.setContentType("text/html;charset=UTF-8");
