@@ -22,6 +22,17 @@ public class Employee extends HttpServlet {
         String username = TokenChecker.authenticate(req, resp);
         if (username == null) { return; }
 
+        switch (req.getPathInfo()) {
+            case "/get":
+                getGoods(username, req, resp);
+                return;
+            case "/delete":
+                deleteGoods(username, req, resp);
+                return;
+            default:
+                break;
+        }
+
         String content = Helpers.getWebpage(Helpers.Webpage.Employee);
         assert content != null;
 
@@ -45,17 +56,11 @@ public class Employee extends HttpServlet {
         }
 
         switch (req.getPathInfo()) {
-            case "/get":
-                getGoods(username, req, resp);
-                break;
             case "/add":
                 addGoods(username, req, resp);
                 break;
             case "/update":
                 updateGoods(username, req, resp);
-                break;
-            case "/delete":
-                deleteGoods(username, req, resp);
                 break;
             default:
                 doGet(req, resp);
@@ -131,18 +136,34 @@ public class Employee extends HttpServlet {
 
     private static void deleteGoods(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
-            JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
+            String goods_id = req.getParameter("goods_id");
+
+            if (goods_id == null) {
+                resp.sendError(400);
+                return;
+            }
 
             if (!Database.deleteGoods(
                     username,
-                    (int) json.get("goods_id")
+                    Integer.parseInt(goods_id)
             )) {
                 resp.sendError(400);
             } else {
                 resp.setStatus(200);
             }
-        } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            try {
+                resp.sendError(500);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        } catch (NumberFormatException e) {
+            try {
+                resp.sendError(400);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
