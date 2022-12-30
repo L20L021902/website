@@ -176,7 +176,7 @@ public class Database {
             if (goodsArray.isEmpty()) {
                 stmt.close();
                 c.close();
-                return "";
+                return "[]";
             } else {
                 stmt.close();
                 c.close();
