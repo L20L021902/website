@@ -415,7 +415,10 @@ public class Database {
             Helpers.replaceOnce(filledWebpage, "$(username)", username); // second place
             Helpers.replaceOnce(filledWebpage, "$(id)", Integer.toString(rs.getInt("ID")));
             Helpers.replaceOnce(filledWebpage, "$(realname)", rs.getString("REALNAME"));
-            if (rs.getString("SEX").equals("男")) {
+            if (rs.getString("SEX") == null) {
+                Helpers.replaceOnce(filledWebpage, "$(male)", "");
+                Helpers.replaceOnce(filledWebpage, "$(female)", "");
+            } else if (rs.getString("SEX").equals("男")) {
                 Helpers.replaceOnce(filledWebpage, "$(male)", "selected");
                 Helpers.replaceOnce(filledWebpage, "$(female)", "");
             } else {
