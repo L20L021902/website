@@ -22,15 +22,17 @@ public class Employee extends HttpServlet {
         String username = TokenChecker.authenticate(req, resp);
         if (username == null) { return; }
 
-        switch (req.getPathInfo()) {
-            case "/get":
-                getGoods(username, req, resp);
-                return;
-            case "/delete":
-                deleteGoods(username, req, resp);
-                return;
-            default:
-                break;
+        if (req.getPathInfo() != null) {
+            switch (req.getPathInfo()) {
+                case "/get":
+                    getGoods(username, req, resp);
+                    return;
+                case "/delete":
+                    deleteGoods(username, req, resp);
+                    return;
+                default:
+                    break;
+            }
         }
 
         StringBuilder content = new StringBuilder(Helpers.getWebpage(Helpers.Webpage.Employee));
@@ -149,7 +151,8 @@ public class Employee extends HttpServlet {
             )) {
                 resp.sendError(400);
             } else {
-                resp.setStatus(200);
+                // success
+                resp.sendRedirect("/employee");
             }
         } catch (IOException e) {
             e.printStackTrace();
