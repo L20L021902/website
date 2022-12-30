@@ -27,4 +27,25 @@ public class Debug {
             e.printStackTrace();
         }
     }
+    public static void listAllUsers() {
+        System.out.println("Listing all users in the database:");
+
+        try (
+                Connection c = Database.getConnectionToMain();
+                Statement stmt = c.createStatement()
+        ){
+
+            ResultSet rs = stmt.executeQuery("SELECT * FROM USERS");
+
+            while(rs.next()) {
+                System.out.printf("%d: username: %s%n",
+                        rs.getInt("ID"),
+                        rs.getString("USERNAME"));
+            }
+
+            System.out.println("Finished listing all users");
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
