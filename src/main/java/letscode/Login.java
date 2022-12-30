@@ -45,7 +45,7 @@ public class Login extends HttpServlet {
             String username = (String) json.get("username");
             String password = (String) json.get("password");
 
-            System.out.print(username);
+            System.out.println(username);
 
             byte[] passwordHash = Helpers.getPasswordHash(password);
 
@@ -54,26 +54,27 @@ public class Login extends HttpServlet {
                 String token = generateToken(username);
                 if (token == null) {
                     resp.sendError(500);
-                    System.out.println(" unsuccessful");
+                    System.out.printf("Login attempt for user %s was unsuccessful%n", username);
                     return;
                 }
 
                 // Sending token cookie to user
                 Cookie tokenCookie = new Cookie("token", token);
                 resp.addCookie(tokenCookie);
+                System.out.println(resp);
 
                 // Redirecting to Client Info page
                 resp.sendRedirect("/infocient/indexclient.html");
-                System.out.println(" successful");
+                System.out.printf("Login attempt for user %s was successful%n", username);
             } else {
                 // Wrong password
                 resp.sendError(403);
-                System.out.println(" unsuccessful");
+                System.out.printf("Login attempt for user %s was unsuccessful%n", username);
             }
 
         } catch (ParseException e) {
             resp.sendError(500);
-            System.out.println("unsuccessful");
+            System.out.println("Login attempt was unsuccessful");
         }
 
     }
