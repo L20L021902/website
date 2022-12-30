@@ -56,7 +56,7 @@ public class Database {
                     " SEX             TEXT    NOT NULL, " +
                     " ADDRESS         TEXT    NOT NULL, " +
                     " PHONE           INTEGER  NOT NULL, " +
-                    " CHECK (SEX in ('男','女')));";
+                    " CHECK (SEX in ('男','女','')));";
             stmt.executeUpdate(sql);
             stmt.close();
 
@@ -85,7 +85,7 @@ public class Database {
                     " SEX                TEXT, " +
                     " ADDRESS            TEXT, " +
                     " PHONE              INTEGER, " +
-                    " CHECK (SEX in ('男','女')));";
+                    " CHECK (SEX in ('男','女','')));";
             stmt.executeUpdate(sql);
             stmt.close();
 
