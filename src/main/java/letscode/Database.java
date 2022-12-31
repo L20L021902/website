@@ -289,7 +289,7 @@ public class Database {
             }
 
             if (clientsArray.isEmpty()) {
-                return "";
+                return "[]";
             } else {
                 return clientsArray.toJSONString();
             }
