@@ -155,7 +155,7 @@ public class Database {
             Connection c = getConnection(username);
             Statement stmt = c.createStatement();
 
-            ResultSet rs = stmt.executeQuery("SELECT ID,GOODS_ID,NAME,CATEGORY,BUY_PRICE,SELL_PRICE,STATUS,UPDATE_DATE FROM GOODS");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM GOODS");
 
             JSONArray goodsArray = new JSONArray();
             while (rs.next()) {
@@ -167,6 +167,7 @@ public class Database {
                 goods.put("category", rs.getString("CATEGORY"));
                 goods.put("buy_price", rs.getInt("BUY_PRICE"));
                 goods.put("sell_price", rs.getInt("SELL_PRICE"));
+                goods.put("stock", rs.getInt("STOCK"));
                 goods.put("status", rs.getString("STATUS"));
                 goods.put("update_date", LocalDateTime.ofEpochSecond(rs.getLong("UPDATE_DATE"), 0, ZoneOffset.UTC).toString());
 

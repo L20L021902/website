@@ -17,6 +17,16 @@ public class Stocks extends HttpServlet {
         String username = TokenChecker.authenticate(req, resp);
         if (username == null) { return; }
 
+        if (req.getPathInfo() != null) {
+            switch (req.getPathInfo()) {
+                case "/get":
+                    getGoods(username, req, resp);
+                    return;
+                default:
+                    break;
+            }
+        }
+
         StringBuilder content = new StringBuilder(Helpers.getWebpage(Helpers.Webpage.Stocks));
         assert content != null;
 
@@ -25,6 +35,24 @@ public class Stocks extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = resp.getWriter()) {
             out.write(content.toString());
+        }
+    }
+
+    private static void getGoods(String username, HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            String json = Database.getGoods(username);
+            if (json == null) {
+                resp.sendError(500);
+                return;
+            }
+
+            resp.setStatus(200);
+            resp.setContentType("application/json");
+            PrintWriter out = resp.getWriter();
+            out.write(json);
+            out.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
