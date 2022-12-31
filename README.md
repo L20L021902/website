@@ -23,7 +23,7 @@
 ```
 
 ## Get goods
-- Method: `POST`
+- Method: `GET`
 - Endpoint: `/employee/get`
 - **Response** Body:
 ```json
@@ -91,7 +91,7 @@
 ```
 
 ## Delete goods
-- Method: `POST`
+- Method: `GET`
 - Endpoint: `/employee/delete`
 - Body:
 ```json
