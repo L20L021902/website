@@ -90,7 +90,14 @@ public class Employee extends HttpServlet {
 
     private static void addGoods(String username, HttpServletRequest req, HttpServletResponse resp) {
         try {
-            JSONObject json = (JSONObject) new JSONParser().parse(req.getReader());
+            String jsonString = Helpers.readFromInputStream(req.getInputStream());
+
+            if (jsonString.isEmpty()) {
+                resp.sendError(400);
+                return;
+            }
+            
+            JSONObject json = (JSONObject) new JSONParser().parse(jsonString);
 
             if (!Database.addGoods(
                     username,
