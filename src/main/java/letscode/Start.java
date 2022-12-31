@@ -27,6 +27,7 @@ public class Start implements ServletContextListener {
         }
         Mock.mockGoods("admin");
         Mock.mockClients("admin");
+        Mock.mockSales("admin");
 
         Debug.listAllTokens();
         Debug.listAllUsers();

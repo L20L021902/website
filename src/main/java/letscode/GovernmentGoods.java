@@ -22,6 +22,16 @@ public class GovernmentGoods extends HttpServlet {
         String username = TokenChecker.authenticate(req, resp);
         if (username == null) { return; }
 
+        if (req.getPathInfo() != null) {
+            switch (req.getPathInfo()) {
+                case "/get":
+                    getSales(username, req, resp);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         String content = Helpers.getWebpage(Helpers.Webpage.GovernmentGoods);
         assert content != null;
 
@@ -45,8 +55,8 @@ public class GovernmentGoods extends HttpServlet {
         }
 
         switch (req.getPathInfo()) {
-            case "/get":
-                getSales(username, req, resp);
+            case "/add":
+                addSale(username, req, resp);
                 break;
             default:
                 doGet(req, resp);

@@ -159,7 +159,7 @@
 ```
 
 ## Get sales
-- Method: `POST`
+- Method: `GET`
 - Endpoint: `/governmentGoods/get`
 - **Response** body:
 ```json

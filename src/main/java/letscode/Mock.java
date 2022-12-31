@@ -131,4 +131,39 @@ public class Mock {
             e.printStackTrace();
         }
     }
+
+    public static void mockSales(String username) {
+        try (
+                Connection c = Database.getConnection(username)
+        ){
+            PreparedStatement stmt;
+
+            stmt = c.prepareStatement("INSERT OR IGNORE INTO SALES VALUES (?,?,?,?,?,?,?)");
+
+            stmt.setInt(2, 567001231);
+            stmt.setInt(3, 233454);
+            stmt.setLong(4, 3750000);
+            stmt.setString(5, "未保存");
+            stmt.setString(6, "667512945:37500");
+            stmt.setLong(7, Instant.parse("2022-10-23T16:15:00.00Z").getEpochSecond());
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            stmt = c.prepareStatement("INSERT OR IGNORE INTO SALES VALUES (?,?,?,?,?,?,?)");
+
+            stmt.setInt(2, 456782345);
+            stmt.setInt(3, 365478);
+            stmt.setLong(4, 3750000);
+            stmt.setString(5, "已经交");
+            stmt.setString(6, "667512945:37500");
+            stmt.setLong(7, Instant.parse("2022-10-24T17:15:00.00Z").getEpochSecond());
+
+            stmt.executeUpdate();
+            stmt.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
