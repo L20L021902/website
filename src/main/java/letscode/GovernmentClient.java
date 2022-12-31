@@ -21,6 +21,18 @@ public class GovernmentClient extends HttpServlet {
         String username = TokenChecker.authenticate(req, resp);
         if (username == null) { return; }
 
+        if (req.getPathInfo() != null) {
+            switch (req.getPathInfo()) {
+                case "/get":
+                    getClients(username, req, resp);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+
         String content = Helpers.getWebpage(Helpers.Webpage.GovernmentClient);
         assert content != null;
 

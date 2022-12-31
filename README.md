@@ -101,7 +101,7 @@
 ```
 
 ## Get clients
-- Method: `POST`
+- Method: `GET`
 - Endpoint: `/governmentClient/get`
 - **Response** Body:
 ```json
