@@ -371,7 +371,7 @@ public class Database {
             }
 
             if (salesArray.isEmpty()) {
-                return "";
+                return "[]";
             } else {
                 return salesArray.toJSONString();
             }
