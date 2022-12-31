@@ -17,14 +17,14 @@ public class Stocks extends HttpServlet {
         String username = TokenChecker.authenticate(req, resp);
         if (username == null) { return; }
 
-        String content = Helpers.getWebpage(Helpers.Webpage.Stocks);
+        StringBuilder content = new StringBuilder(Helpers.getWebpage(Helpers.Webpage.Stocks));
         assert content != null;
 
-        // TODO replace placeholders
+        Helpers.replaceOnce(content, "$(username)", username);
 
         resp.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = resp.getWriter()) {
-            out.write(content);
+            out.write(content.toString());
         }
     }
 }
