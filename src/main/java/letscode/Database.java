@@ -435,4 +435,75 @@ public class Database {
             return null;
         }
     }
+
+    public static boolean addSale(String username, int orderID, int clientID, JSONArray orderContents, long updateTime) {
+        if (orderID == 0 || clientID == 0 || orderContents == null || orderContents.isEmpty() || updateTime == 0) {
+            return false;
+        }
+
+        try (Connection c = Database.getConnection(username)) {
+            // checking that client exists
+            PreparedStatement stmt = c.prepareStatement("SELECT ID FROM CLIENTS WHERE CLIENT_ID is ?");
+
+            stmt.setInt(1, clientID);
+
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                // the client doesn't exist
+                return false;
+            }
+
+            stmt.close();
+
+            // checking that all goods exist
+            StringBuilder orderContentString = new StringBuilder();
+            long totalCost = 0;
+            for (Object item: orderContents) {
+                JSONObject position = (JSONObject) item;
+                int goodsID = (int) position.get("goods_id");
+                int goodsAmount = (int) position.get("goods_amount");
+                if (goodsAmount <= 0) {
+                    // bad value
+                    return false;
+                }
+
+                stmt = c.prepareStatement("SELECT SELL_PRICE FROM GOODS WHERE GOODS.GOODS_ID is ?");
+
+                stmt.setInt(1, goodsID);
+
+                rs = stmt.executeQuery();
+                if (!rs.next()) {
+                    // no such goods
+                    stmt.close();
+                    return false;
+                }
+
+                // adding to total order cost
+                totalCost += (long) goodsAmount * rs.getInt("SELL_PRICE");
+
+                // adding to order content string
+                orderContentString.append(String.format("%d:%d,", goodsID, goodsAmount));
+
+                stmt.close();
+            }
+
+            // adding order to the database
+            stmt = c.prepareStatement("INSERT INTO SALES VALUES (?,?,?,?,?,?,?)");
+
+            stmt.setInt(2, orderID);
+            stmt.setInt(3, clientID);
+            stmt.setLong(4, totalCost);
+            stmt.setString(5, "未保存");
+            stmt.setString(6, orderContentString.toString());
+            stmt.setLong(7, updateTime);
+
+            stmt.executeUpdate();
+            stmt.close();
+
+            return true;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

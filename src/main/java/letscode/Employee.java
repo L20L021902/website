@@ -96,7 +96,7 @@ public class Employee extends HttpServlet {
                 resp.sendError(400);
                 return;
             }
-            
+
             JSONObject json = (JSONObject) new JSONParser().parse(jsonString);
 
             if (!Database.addGoods(

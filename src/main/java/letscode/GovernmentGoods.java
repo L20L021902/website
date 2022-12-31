@@ -1,5 +1,10 @@
 package letscode;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -7,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Instant;
 
 @WebServlet(urlPatterns = "/governmentGoods/*")
 public class GovernmentGoods extends HttpServlet {
@@ -62,6 +68,34 @@ public class GovernmentGoods extends HttpServlet {
                 out.write(json);
             }
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void addSale(String username, HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            String jsonString = Helpers.readFromInputStream(req.getInputStream());
+
+            if (jsonString.isEmpty()) {
+                resp.sendError(400);
+                return;
+            }
+
+            JSONObject json = (JSONObject) new JSONParser().parse(jsonString);
+            JSONArray orderContents = (JSONArray) json.get("order_goods");
+
+            if (!Database.addSale(
+                    username,
+                    (int) json.get("order_id"),
+                    (int) json.get("client_id"),
+                    orderContents,
+                    Instant.now().getEpochSecond()
+            )) {
+                resp.sendError(400);
+            } else {
+                resp.setStatus(200);
+            }
+        } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
     }

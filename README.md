@@ -157,3 +157,49 @@
     "address": "大道街"
 }
 ```
+
+## Get sales
+- Method: `POST`
+- Endpoint: `/governmentGoods/get`
+- **Response** body:
+```json
+[
+  {
+    "id": 1,
+    "order_id": 567001231,
+    "client_id": 233454,
+    "amount": 3570000,
+    "status": "未保存",
+    "update_date": "2022-10-23 16:15:00"
+  },
+  {
+    "id": 2,
+    "order_id": 456782345,
+    "client_id": 365478,
+    "amount": 3570000,
+    "status": "已经交",
+    "update_date": "2022-10-24 17:15:00"
+  }
+]
+```
+
+## Add sale
+- Method: `POST`
+- Endpoint: `/governemntGoods/add`
+- Body:
+```json
+{
+  "order_id": 567001231,
+  "client_id": 233454,
+  "order_goods": [
+    {
+      "goods_id": 667512945,
+      "goods_amount": 10
+    },
+    {
+      "goods_id": 567001231,
+      "goods_amount": 25
+    }
+  ]
+}
+```
