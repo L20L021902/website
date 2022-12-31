@@ -32,14 +32,14 @@ public class GovernmentGoods extends HttpServlet {
             }
         }
 
-        String content = Helpers.getWebpage(Helpers.Webpage.GovernmentGoods);
+        StringBuilder content = new StringBuilder(Helpers.getWebpage(Helpers.Webpage.GovernmentGoods));
         assert content != null;
 
-        // TODO replace placeholders
+        Helpers.replaceOnce(content, "$(username)", username);
 
         resp.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = resp.getWriter()) {
-            out.write(content);
+            out.write(content.toString());
         }
     }
 

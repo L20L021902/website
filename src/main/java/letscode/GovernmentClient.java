@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.Instant;
 
 @WebServlet(urlPatterns = "/governmentClient/*")
 public class GovernmentClient extends HttpServlet {
@@ -33,14 +32,14 @@ public class GovernmentClient extends HttpServlet {
 
 
 
-        String content = Helpers.getWebpage(Helpers.Webpage.GovernmentClient);
+        StringBuilder content = new StringBuilder(Helpers.getWebpage(Helpers.Webpage.GovernmentClient));
         assert content != null;
 
-        // TODO replace placeholders
+        Helpers.replaceOnce(content, "$(username)", username);
 
         resp.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = resp.getWriter()) {
-            out.write(content);
+            out.write(content.toString());
         }
     }
 
@@ -56,9 +55,6 @@ public class GovernmentClient extends HttpServlet {
         }
 
         switch (req.getPathInfo()) {
-            case "/get":
-                getClients(username, req, resp);
-                break;
             case "/add":
                 addClient(username, req, resp);
                 break;
